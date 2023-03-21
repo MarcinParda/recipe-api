@@ -1,0 +1,28 @@
+### [C]reate products
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "name": "Milk",
+  "unit": "l",
+  "amount": 1,
+  "dishId": 1
+}
+
+### [R]ead products
+GET http://localhost:3000/products
+
+### [U]pdate dish
+PUT http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Chips",
+  "amount": 2,
+  "unit": "kg",
+  "dishId": 1
+}
+
+### [D]elete dish
+DELETE http://localhost:3000/products/1
