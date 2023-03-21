@@ -1,0 +1,25 @@
+GET http://localhost:3000
+Content-Type: application/json
+
+### Get user
+GET http://localhost:3000/user
+Content-Type: application/json
+
+### Create fruit
+POST http://localhost:3000/
+Content-Type: application/json
+
+{
+    "name": "Apple"
+}
+
+### Update fruit
+PUT http://localhost:3000/
+Content-Type: application/json
+
+{
+    "name": "Mango"
+}
+
+### Delete fruit
+DELETE http://localhost:3000/12
