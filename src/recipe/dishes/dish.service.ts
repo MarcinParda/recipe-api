@@ -12,11 +12,11 @@ export class DishService {
   }
 
   read() {
-    return Dish.find();
+    return Dish.find({ relations: ['products'] });
   }
 
   async getOneById(id: number) {
-    const dish = await Dish.findOne({ where: { id } });
+    const dish = await Dish.findOne({ where: { id }, relations: ['products'] });
     if (!dish) {
       throw new NotFoundException(`Dish with id ${id} not found`);
     }
