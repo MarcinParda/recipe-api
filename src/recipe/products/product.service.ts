@@ -4,60 +4,45 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { DishService } from 'src/dishes/dish.service';
+import { DishService } from '../dishes/dish.service';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
 import { Product } from './Products';
 
 @Injectable()
 export class ProductService {
-  private trackId = 1;
-  private products: Product[] = [];
   private dishService: DishService;
 
   constructor(@Inject(forwardRef(() => DishService)) dishService: DishService) {
     this.dishService = dishService;
   }
 
-  readAll() {
-    return this.products;
+  create(product: CreateProductDTO) {
+    const newProduct = new Product();
+    Object.assign(newProduct, product);
+    return newProduct.save();
   }
 
-  getOneById(productId: number): Product {
-    const product = this.products.find((d) => d.id === productId);
+  read() {
+    return Product.find();
+  }
+
+  async getOneById(id: number) {
+    const product = await Product.findOne({ where: { id } });
     if (!product) {
-      throw new NotFoundException(`Product with id: ${productId} not found`);
+      throw new NotFoundException(`Product with id ${id} not found`);
     }
     return product;
   }
 
-  getAllByDishId(dishId: number): Product[] {
-    return this.products.filter((product) => product.dishId === dishId);
-  }
-
-  create(product: CreateProductDTO) {
-    this.dishService.getOneById(product.dishId);
-    const newproduct: Product = {
-      ...product,
-      id: this.trackId++,
-    };
-    this.products.push(newproduct);
-    return newproduct;
-  }
-
-  read(): readonly Product[] {
-    return this.products;
-  }
-
-  update(product: UpdateProductDTO) {
-    const productToUpdate = this.getOneById(product.id);
+  async update(product: UpdateProductDTO) {
+    const productToUpdate = await this.getOneById(product.id);
     Object.assign(productToUpdate, product);
-    return productToUpdate;
+    return productToUpdate.save();
   }
 
-  delete(productId: number) {
-    this.getOneById(productId);
-    this.products = this.products.filter((d) => d.id !== Number(productId));
-    return { productId };
+  async delete(id: number) {
+    const productToDelete = await this.getOneById(id);
+    return productToDelete.remove();
   }
 }
