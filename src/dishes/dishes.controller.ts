@@ -27,6 +27,11 @@ export class DishesController {
     return this.dishService.read();
   }
 
+  @Get(':id')
+  readOne(@Param('id', ParseIntPipe) dishId: number) {
+    return this.dishService.getOneById(dishId);
+  }
+
   @Put() updateOne(@Body() dish: UpdateDishDTO) {
     return this.dishService.update(dish);
   }

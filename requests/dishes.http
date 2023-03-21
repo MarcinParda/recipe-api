@@ -10,6 +10,9 @@ Content-Type: application/json
 ### [R]ead dishes
 GET http://localhost:3000/dishes
 
+### [R]ead one dishe
+GET http://localhost:3000/dishes/2
+
 ### [U]pdate dish
 PUT http://localhost:3000/dishes
 Content-Type: application/json
