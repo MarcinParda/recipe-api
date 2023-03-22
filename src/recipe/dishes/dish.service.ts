@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Dish } from './Dish';
+import { Dish } from './dish.entity';
 import { CreateDishDTO } from './dto/create-dish.dto';
 import { UpdateDishDTO } from './dto/update-dish.dto';
 

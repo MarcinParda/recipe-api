@@ -7,7 +7,7 @@ import {
 import { DishService } from '../dishes/dish.service';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
-import { Product } from './Products';
+import { Product } from './product.entity';
 
 @Injectable()
 export class ProductService {

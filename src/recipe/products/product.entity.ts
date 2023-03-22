@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Dish } from '../dishes/Dish';
+import { Dish } from '../dishes/dish.entity';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -14,6 +14,9 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'varchar' })
   name: string;
+
+  @Column({ nullable: true, type: 'varchar' })
+  slug: string;
 
   @Column({ type: 'varchar' })
   unit: 'kg' | 'g' | 'l' | 'ml' | 'tsp' | 'sp' | 'pinch' | 'item';

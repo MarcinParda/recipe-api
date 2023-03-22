@@ -1,11 +1,13 @@
+import { User } from 'src/user/user.entity';
 import {
   BaseEntity,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Product } from '../products/Products';
+import { Product } from '../products/product.entity';
 
 @Entity()
 export class Dish extends BaseEntity {
@@ -23,4 +25,12 @@ export class Dish extends BaseEntity {
 
   @OneToMany(() => Product, (product) => product.dish)
   products: Product[];
+
+  @ManyToOne(() => User, (user) => user.dishes, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
+
+  @Column({ type: 'boolean', default: false })
+  isPublic: boolean;
 }
