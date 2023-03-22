@@ -2,10 +2,10 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Dish } from '../dishes/dish.entity';
+import { Ingredient } from '../ingredients/ingredient.entity';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -21,11 +21,8 @@ export class Product extends BaseEntity {
   @Column({ type: 'varchar' })
   unit: 'kg' | 'g' | 'l' | 'ml' | 'tsp' | 'sp' | 'pinch' | 'item';
 
-  @Column({ type: 'decimal' })
-  amount: number;
-
-  @ManyToOne(() => Dish, (dish) => dish.products, {
+  @OneToMany(() => Ingredient, (ingredient) => ingredient.product, {
     onDelete: 'CASCADE',
   })
-  dish: Dish;
+  ingredients: Ingredient[];
 }

@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Product } from '../products/product.entity';
+import { Ingredient } from '../ingredients/ingredient.entity';
 
 @Entity()
 export class Dish extends BaseEntity {
@@ -23,9 +23,6 @@ export class Dish extends BaseEntity {
   @Column({ nullable: true, type: 'text' })
   description?: string;
 
-  @OneToMany(() => Product, (product) => product.dish)
-  products: Product[];
-
   @ManyToOne(() => User, (user) => user.dishes, {
     onDelete: 'CASCADE',
   })
@@ -33,4 +30,9 @@ export class Dish extends BaseEntity {
 
   @Column({ type: 'boolean', default: false })
   isPublic: boolean;
+
+  @OneToMany(() => Ingredient, (ingredient) => ingredient.dish, {
+    onDelete: 'CASCADE',
+  })
+  ingredients: Ingredient[];
 }
