@@ -8,23 +8,21 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { DishService } from '../dishes/dish.service';
-import { CreateProductDTO } from './dto/create-product.dto';
-import { UpdateProductDTO } from './dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(
-    private productService: ProductService,
-    private dishService: DishService,
-  ) {
+  private productService: ProductService;
+
+  constructor(productService: ProductService) {
     this.productService = productService;
-    this.dishService = dishService;
   }
 
-  @Post() createOne(@Body() product: CreateProductDTO) {
-    this.dishService.getOneById(product.dishId);
+  @Post()
+  createOne(@Body() product: CreateProductDto) {
+    // const dish = this.dishService.getOneById(product.dishId);
     return this.productService.create(product);
   }
 
@@ -33,7 +31,8 @@ export class ProductsController {
     return this.productService.read();
   }
 
-  @Put() updateOne(@Body() product: UpdateProductDTO) {
+  @Put()
+  updateOne(@Body() product: UpdateProductDto) {
     return this.productService.update(product);
   }
 

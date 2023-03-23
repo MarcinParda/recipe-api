@@ -3,22 +3,27 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { DishService } from './dish.service';
-import { CreateDishDTO } from './dto/create-dish.dto';
-import { UpdateDishDTO } from './dto/update-dish.dto';
+import { CreateDishDto } from './dto/create-dish.dto';
+import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Controller('dishes')
 export class DishesController {
-  constructor(private dishService: DishService) {
+  private dishService: DishService;
+
+  constructor(dishService: DishService) {
     this.dishService = dishService;
   }
 
-  @Post() createOne(@Body() dish: CreateDishDTO) {
+  @Post()
+  createOne(@Body() dish: CreateDishDto) {
     return this.dishService.create(dish);
   }
 
@@ -32,7 +37,8 @@ export class DishesController {
     return this.dishService.getOneById(dishId);
   }
 
-  @Put() updateOne(@Body() dish: UpdateDishDTO) {
+  @Put()
+  updateOne(@Body() dish: UpdateDishDto) {
     return this.dishService.update(dish);
   }
 

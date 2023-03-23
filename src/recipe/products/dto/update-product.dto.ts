@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 
-export class UpdateProductDTO {
+export class UpdateProductDto {
   @IsNumber()
   id: number;
 
@@ -8,9 +8,9 @@ export class UpdateProductDTO {
   name: string;
 
   @IsString()
-  unit: 'kg' | 'g' | 'l' | 'ml' | 'tsp' | 'sp' | 'pinch' | 'item';
+  unit: 'kg' | 'g' | 'tsp' | 'sp' | 'pinch' | 'ml' | 'l' | 'item';
 
-  @IsNumber({}, { message: 'Amount must be a number' })
+  @IsNumber()
   amount: number;
 
   @IsNumber()

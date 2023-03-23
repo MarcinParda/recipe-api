@@ -1,36 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Dish } from './dish.entity';
-import { CreateDishDTO } from './dto/create-dish.dto';
-import { UpdateDishDTO } from './dto/update-dish.dto';
+import { CreateDishDto } from './dto/create-dish.dto';
+import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Injectable()
 export class DishService {
-  create(dish: CreateDishDTO) {
-    const newDish = new Dish();
-    Object.assign(newDish, dish);
-    return newDish.save();
+  constructor(
+    @InjectRepository(Dish) private dishRepository: Repository<Dish>,
+  ) {}
+
+  create(dish: CreateDishDto): Promise<Dish> {
+    // const newDish = new Dish();
+    // Object.assign(newDish, dish);
+    return this.dishRepository.save(dish);
   }
 
-  read() {
-    return Dish.find({ relations: ['products'] });
+  read(): Promise<Dish[]> {
+    return this.dishRepository.find();
   }
 
-  async getOneById(id: number) {
-    const dish = await Dish.findOne({ where: { id }, relations: ['products'] });
+  async getOneById(id: number): Promise<Dish> {
+    const dish = await this.dishRepository.findOne(id, {
+      relations: ['products'],
+    });
     if (!dish) {
-      throw new NotFoundException(`Dish with id ${id} not found`);
+      throw new NotFoundException('Dish not found');
     }
     return dish;
   }
 
-  async update(dish: UpdateDishDTO) {
-    const dishToUpdate = await this.getOneById(dish.id);
-    Object.assign(dishToUpdate, dish);
-    return dishToUpdate.save();
+  async update(dish: UpdateDishDto) {
+    await this.getOneById(dish.id);
+    return this.dishRepository.update(dish.id, dish);
   }
 
-  async delete(dishId: number) {
-    const dishToDelete = await this.getOneById(dishId);
-    return dishToDelete.remove();
+  async delete(dishId: number): Promise<Dish> {
+    const dishToRemove = await this.getOneById(dishId);
+    return this.dishRepository.remove(dishToRemove);
   }
 }

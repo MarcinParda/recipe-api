@@ -2,11 +2,13 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Dish } from '../dishes/dish.entity';
 import { Product } from '../products/product.entity';
+import { Dish } from '../dishes/dish.entity';
 
 @Entity()
 export class Ingredient extends BaseEntity {
@@ -16,9 +18,13 @@ export class Ingredient extends BaseEntity {
   @Column({ type: 'decimal' })
   amount: number;
 
-  @ManyToOne(() => Product, (product) => product.ingredients)
+  @ManyToOne(() => Product, (product: Product) => product.ingredients, {
+    onDelete: 'CASCADE',
+  })
   product: Product;
 
-  @ManyToOne(() => Dish, (dish) => dish.ingredients)
+  @ManyToOne(() => Dish, (dish: Dish) => dish.ingredients, {
+    onDelete: 'CASCADE',
+  })
   dish: Dish;
 }

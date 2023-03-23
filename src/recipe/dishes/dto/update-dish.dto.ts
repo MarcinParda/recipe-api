@@ -1,6 +1,6 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsString, IsOptional } from 'class-validator';
 
-export class UpdateDishDTO {
+export class UpdateDishDto {
   @IsNumber()
   id: number;
 
@@ -10,7 +10,7 @@ export class UpdateDishDTO {
   @IsNumber({}, { message: 'Servings must be a number' })
   servings: number;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   description?: string;
 }

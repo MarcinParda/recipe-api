@@ -1,12 +1,13 @@
-import { User } from 'src/user/user.entity';
 import {
-  BaseEntity,
-  Column,
   Entity,
-  ManyToOne,
-  OneToMany,
+  Column,
   PrimaryGeneratedColumn,
+  BaseEntity,
+  OneToMany,
+  ManyToOne,
 } from 'typeorm';
+import { Product } from '../products/product.entity';
+import { User } from '../../user/user.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
 
 @Entity()
@@ -17,21 +18,24 @@ export class Dish extends BaseEntity {
   @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'varchar' })
+  slug: string;
+
   @Column({ type: 'decimal' })
   servings: number;
 
   @Column({ nullable: true, type: 'text' })
   description?: string;
 
-  @ManyToOne(() => User, (user) => user.dishes, {
+  @ManyToOne(() => User, (user: User) => user.dishes, {
     onDelete: 'CASCADE',
   })
   user: User;
 
   @Column({ type: 'boolean', default: false })
-  isPublic: boolean;
+  isPublic: number;
 
-  @OneToMany(() => Ingredient, (ingredient) => ingredient.dish, {
+  @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.dish, {
     onDelete: 'CASCADE',
   })
   ingredients: Ingredient[];
