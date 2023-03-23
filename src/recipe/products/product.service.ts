@@ -1,9 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DishService } from '../dishes/dish.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDTO } from './dto/create-product.dto';
+import { UpdateProductDTO } from './dto/update-product.dto';
 import { Product } from './product.entity';
 
 @Injectable()
@@ -12,7 +11,7 @@ export class ProductService {
     @InjectRepository(Product) private productRepository: Repository<Product>,
   ) {}
 
-  async create(product: CreateProductDto): Promise<Product> {
+  async create(product: CreateProductDTO): Promise<Product> {
     // const newProduct = new Product();
     // Object.assign(newProduct, product);
     const newProduct = this.productRepository.create(product);
@@ -35,7 +34,7 @@ export class ProductService {
     return product;
   }
 
-  async update(product: UpdateProductDto) {
+  async update(product: UpdateProductDTO) {
     await this.getOneById(product.id);
     return this.productRepository.update(product.id, product);
   }

@@ -5,7 +5,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Product } from '../recipe/products/product.entity';
 import { Dish } from '../recipe/dishes/dish.entity';
 
 @Entity()

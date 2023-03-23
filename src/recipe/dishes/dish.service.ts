@@ -12,8 +12,6 @@ export class DishService {
   ) {}
 
   create(dish: CreateDishDto): Promise<Dish> {
-    // const newDish = new Dish();
-    // Object.assign(newDish, dish);
     return this.dishRepository.save(dish);
   }
 

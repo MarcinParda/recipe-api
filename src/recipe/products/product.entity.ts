@@ -3,10 +3,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
-  ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Dish } from '../dishes/dish.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
 
 @Entity()
