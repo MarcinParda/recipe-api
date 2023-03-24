@@ -10,6 +10,11 @@ export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
+  async findOne(where: Partial<User>): Promise<User> {
+    return this.userRepository.findOne({ where });
+  }
+
   async create(
     user: Pick<CreateUsertDTO, 'email' | 'password'>,
   ): Promise<User> {
