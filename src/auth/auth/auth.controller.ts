@@ -24,7 +24,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() { email, password }: CreateUsertDTO, @Res() res) {
     const user = await this.authService.register({ email, password });
-    this.authService.setAuthTokens(res, { user_id: user.id });
+    await this.authService.setAuthTokens(res, { user_id: user.id });
 
     return res.json({
       ...user,
@@ -36,7 +36,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() { email, password }: LoginUsertDTO, @Res() res) {
     const user = await this.authService.login({ email, password });
-    this.authService.setAuthTokens(res, { user_id: user.id });
+    await this.authService.setAuthTokens(res, { user_id: user.id });
 
     return res.json({
       ...user,

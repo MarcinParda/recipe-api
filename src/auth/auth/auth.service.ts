@@ -34,27 +34,53 @@ export class AuthService {
 
   generateTokens(payload: [token: string]) {
     const token = this.jwtService.sign(payload);
-    return [token];
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: `${this.configService.get<string>(
+        'JWT_EXPIRATION_REFRESH_SECRET',
+      )}s`,
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET_TOKEN'),
+    });
+    return [token, refreshToken];
   }
 
-  setAuthTokens(res, payload): { accessToken: string } {
-    const [accessToken] = this.generateTokens(payload);
-
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      domain: this.configService.get('DOMAIN'),
-      expires: new Date(
-        Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
-      ),
+  async setAuthTokens(
+    res,
+    payload,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const [accessToken, refreshToken] = this.generateTokens(payload);
+    await this.userService.update(payload.user_id, {
+      refreshToken: bcrypt.hashSync(refreshToken, 8),
     });
 
-    return { accessToken };
+    res
+      .cookie('access_token', accessToken, {
+        httpOnly: true,
+        domain: this.configService.get('DOMAIN'),
+        expires: new Date(
+          Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
+        ),
+      })
+      .cookie('refresh_token', accessToken, {
+        httpOnly: true,
+        domain: this.configService.get('DOMAIN'),
+        expires: new Date(
+          Date.now() +
+            this.configService.get('JWT_REFRESH_SECRET_TOKEN') * 1000,
+        ),
+      });
+
+    return { accessToken, refreshToken };
   }
 
   clearAuthTokens(res) {
-    res.clearCookie('access_token', {
-      httpOnly: true,
-      domain: this.configService.get('DOMAIN'),
-    });
+    res
+      .clearCookie('access_token', {
+        httpOnly: true,
+        domain: this.configService.get('DOMAIN'),
+      })
+      .clearCookie('refresh_token', {
+        httpOnly: true,
+        domain: this.configService.get('DOMAIN'),
+      });
   }
 }

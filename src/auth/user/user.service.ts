@@ -4,6 +4,7 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUsertDTO } from './dto/create-user.dto';
 import bcrypt from 'bcrypt';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -26,5 +27,17 @@ export class UserService {
 
   hashPassword(password: string): string {
     return bcrypt.hashSync(password, 8);
+  }
+
+  async update(id: number, props: Partial<UpdateUserDTO>) {
+    const user = await this.userRepository.preload({
+      id,
+      ...props,
+    });
+    if (!user) {
+      throw new Error(`User with id ${id} does not exist`);
+    }
+
+    return this.userRepository.save(user);
   }
 }
