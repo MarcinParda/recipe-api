@@ -1,7 +1,7 @@
 import {
-  ValidationOptions,
-  ValidationArguments,
   registerDecorator,
+  ValidationArguments,
+  ValidationOptions,
 } from 'class-validator';
 
 export function Match<T>(
@@ -23,7 +23,7 @@ export function Match<T>(
         },
         defaultMessage(args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
-          return `${relatedPropertyName} and ${args.property} do not match`;
+          return `${propertyName} must match ${relatedPropertyName}`;
         },
       },
     });

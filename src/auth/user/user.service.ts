@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -29,15 +29,16 @@ export class UserService {
     return bcrypt.hashSync(password, 8);
   }
 
-  async update(id: number, props: Partial<UpdateUserDTO>) {
-    const user = await this.userRepository.preload({
-      id,
-      ...props,
+  async update(user: Partial<UpdateUserDTO>): Promise<User> {
+    const userToUpdate = await this.userRepository.findOne({
+      where: { id: user.id },
     });
-    if (!user) {
-      throw new Error(`User with id ${id} does not exist`);
+    if (!userToUpdate) {
+      throw new NotFoundException('User not found');
     }
-
-    return this.userRepository.save(user);
+    return this.userRepository.save({
+      ...userToUpdate,
+      ...user,
+    });
   }
 }
