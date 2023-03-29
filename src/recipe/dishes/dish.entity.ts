@@ -6,7 +6,6 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { Product } from '../products/product.entity';
 import { User } from '../../auth/user/user.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
 
@@ -31,6 +30,9 @@ export class Dish extends BaseEntity {
     onDelete: 'CASCADE',
   })
   user: User;
+
+  @Column({ type: 'int' })
+  userId: number;
 
   @Column({ type: 'boolean', default: false })
   isPublic: boolean;

@@ -12,4 +12,7 @@ export class UpdateDishDto {
 
   @IsString()
   description?: string;
+
+  @IsNumber()
+  userId: number;
 }

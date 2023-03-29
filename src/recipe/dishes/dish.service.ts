@@ -38,6 +38,17 @@ export class DishService {
     return dish;
   }
 
+  async getOneOf(userId: number, id: number) {
+    const dish = await this.dishRepository.findOne({
+      id,
+      userId,
+    });
+    if (!dish) {
+      throw new NotFoundException('Dish not found');
+    }
+    return dish;
+  }
+
   async update(dish: UpdateDishDto) {
     await this.getOneById(dish.id);
     return this.dishRepository.update(dish.id, dish);
