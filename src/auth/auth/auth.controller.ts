@@ -11,11 +11,13 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateUsertDTO } from '../user/dto/create-user.dto';
-import { LoginUsertDTO } from '../user/dto/login-user.dto';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt.guard';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/user.entity';
+import { LoginUserDto } from '../user/dto/login-user.dto';
+import { Response } from 'express';
 import { RefreshAuthGuard } from './refresh.guard';
+import { JwtAuthGuard } from './jwt.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -24,11 +26,11 @@ export class AuthController {
 
   @Post('register')
   async register(
-    @Body() { email, password }: CreateUsertDTO,
+    @Body() { email, password }: CreateUserDto,
     @Res({ passthrough: true }) res,
-  ) {
+  ): Promise<User> {
     const user = await this.authService.register({ email, password });
-    await this.authService.setAuthTokens(res, {
+    await this.authService.setAuthToken(res, {
       user_id: user.id,
     });
 
@@ -38,11 +40,11 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
-    @Body() { email, password }: LoginUsertDTO,
+    @Body() { email, password }: LoginUserDto,
     @Res({ passthrough: true }) res,
   ) {
     const user = await this.authService.login({ email, password });
-    await this.authService.setAuthTokens(res, {
+    await this.authService.setAuthToken(res, {
       user_id: user.id,
     });
 
@@ -58,7 +60,7 @@ export class AuthController {
       req.user.refreshToken,
     );
 
-    await this.authService.setAuthTokens(res, {
+    await this.authService.setAuthToken(res, {
       user_id: req.user.id,
     });
 

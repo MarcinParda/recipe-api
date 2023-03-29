@@ -8,9 +8,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/auth/jwt.guard';
-import { CreateIngredientDto } from './dto/create-dish.dto';
 import { IngredientService } from './ingredient.service';
+import { CreateIngredientDto } from './dto/create-ingredient.dto';
+import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
 
 @Controller('ingredients')
 export class IngredientsController {

@@ -1,10 +1,10 @@
 import { OmitType } from '@nestjs/mapped-types';
+import { UpdateUserDto } from './update-user.dto';
 import { IsString } from 'class-validator';
-import { Match } from 'src/decorators/match.decorators';
-import { UpdateUserDTO } from './update-user.dto';
+import { Match } from '../../../common/decorators/match.decorator';
 
-export class CreateUsertDTO extends OmitType(UpdateUserDTO, ['id'] as const) {
+export class CreateUserDto extends OmitType(UpdateUserDto, ['id'] as const) {
   @IsString()
-  @Match<CreateUsertDTO>('password')
+  @Match<CreateUserDto>('password')
   confirmPassword: string;
 }

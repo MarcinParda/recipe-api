@@ -1,25 +1,31 @@
-GET http://localhost:3000
-Content-Type: application/json
+### NestJs endpoint /
+GET localhost:3000/
 
-### Get user
-GET http://localhost:3000/user
-Content-Type: application/json
+### NestJs endpoint /user
+GET localhost:3000/user
 
-### Create fruit
-POST http://localhost:3000/
+### Express.js endpoint /
+GET localhost:3031/
+
+### Express.js endpoint /user
+GET localhost:3031/user
+
+
+### Create Frut
+POST localhost:3000/
 Content-Type: application/json
 
 {
-    "name": "Apple"
+  "name": "Mango"
 }
 
-### Update fruit
-PUT http://localhost:3000/
+### Update Fruit
+PUT localhost:3000/
 Content-Type: application/json
 
 {
-    "name": "Mango"
+  "name": "Cherry"
 }
 
-### Delete fruit
-DELETE http://localhost:3000/12
+### Delete Fruit
+DELETE localhost:3000/12

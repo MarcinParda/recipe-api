@@ -1,6 +1,6 @@
 import { OmitType } from '@nestjs/mapped-types';
-import { UpdateProductDTO } from './update-product.dto';
+import { UpdateProductDto } from './update-product.dto';
 
-export class CreateProductDTO extends OmitType(UpdateProductDTO, [
+export class CreateProductDto extends OmitType(UpdateProductDto, [
   'id',
 ] as const) {}

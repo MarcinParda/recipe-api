@@ -1,7 +1,7 @@
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import { Product } from '../../../recipe/products/product.entity';
-import { initializeSeeds } from '../initializeSeeds';
+import { initializeSeeds } from '../initailizeSeeds';
 
 initializeSeeds();
 

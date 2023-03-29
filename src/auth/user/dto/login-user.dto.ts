@@ -1,7 +1,9 @@
-import { PickType } from '@nestjs/mapped-types';
-import { UpdateUserDTO } from './update-user.dto';
+import { OmitType, PickType } from '@nestjs/mapped-types';
+import { UpdateUserDto } from './update-user.dto';
+import { IsString } from 'class-validator';
+import { Match } from '../../../common/decorators/match.decorator';
 
-export class LoginUsertDTO extends PickType(UpdateUserDTO, [
+export class LoginUserDto extends PickType(UpdateUserDto, [
   'email',
   'password',
 ] as const) {}

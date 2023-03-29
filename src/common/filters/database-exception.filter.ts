@@ -1,13 +1,9 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpStatus,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
-import { PostgresError } from 'pg-error-enum';
+import { Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
 import { QueryFailedError, TypeORMError } from 'typeorm';
+import { ArgumentsHost } from '@nestjs/common/interfaces/features/arguments-host.interface';
+import { PostgresError } from 'pg-error-enum';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Catch(TypeORMError)
 export class DatabaseExceptionFilter implements ExceptionFilter {
@@ -33,7 +29,7 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
       });
     }
 
-    response.status(statusCode).json({
+    return response.status(statusCode).json({
       statusCode,
       message,
     });

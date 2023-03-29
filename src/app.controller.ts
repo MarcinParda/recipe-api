@@ -12,12 +12,12 @@ import {
 export class AppController {
   @Get()
   getHello(): string {
-    return 'Hello World!';
+    return 'Hello !';
   }
 
   @Get('/user')
   getSample() {
-    return { name: 'John Doe' };
+    return { name: 'Michal' };
   }
 
   @Post()
@@ -27,7 +27,7 @@ export class AppController {
 
   @Put()
   updateFruit(@Body() fruit: { name: string }) {
-    return { fruit };
+    return fruit;
   }
 
   @Delete(':fruitId')

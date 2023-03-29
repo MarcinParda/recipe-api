@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import slugify from 'slugify';
-import { UserService } from 'src/auth/user/user.service';
 import { Repository } from 'typeorm';
 import { Dish } from './dish.entity';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
+import { UserService } from '../../auth/user/user.service';
+import slugify from 'slugify';
 
 @Injectable()
 export class DishService {
@@ -14,13 +14,13 @@ export class DishService {
     private readonly userService: UserService,
   ) {}
 
-  async create(userId: number, dish: CreateDishDto) {
+  async create(userId: number, dish: CreateDishDto): Promise<Dish> {
     const user = await this.userService.getOneById(userId);
     const slug = await this.generateSlug(dish.name);
     return this.dishRepository.save({
       ...dish,
-      user,
       slug,
+      user,
     });
   }
 
@@ -30,7 +30,7 @@ export class DishService {
 
   async getOneById(id: number): Promise<Dish> {
     const dish = await this.dishRepository.findOne(id, {
-      relations: ['products'],
+      relations: ['user'],
     });
     if (!dish) {
       throw new NotFoundException('Dish not found');
@@ -38,7 +38,7 @@ export class DishService {
     return dish;
   }
 
-  async getOneOf(userId: number, id: number) {
+  async getOneOf(userId: number, id: number): Promise<Dish> {
     const dish = await this.dishRepository.findOne({
       id,
       userId,
@@ -70,12 +70,12 @@ export class DishService {
       return slug;
     }
 
-    slug = `${slug}-${exists.length}`;
+    slug = slug + '-' + exists.length;
     return slug;
   }
 
-  private async findSlugs(slug: string) {
-    return this.dishRepository
+  private async findSlugs(slug: string): Promise<Dish[]> {
+    return await this.dishRepository
       .createQueryBuilder('dish')
       .where('slug LIKE :slug', { slug: `${slug}%` })
       .getMany();

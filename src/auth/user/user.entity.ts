@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import {
   BaseEntity,
   Column,
@@ -7,13 +6,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Dish } from '../../recipe/dishes/dish.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   email: string;
 
   @Exclude()
@@ -23,6 +23,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Dish, (dish: Dish) => dish.user)
   dishes: Dish[];
 
+  @Exclude()
   @Column({ type: 'varchar' })
   refreshToken: string;
 }

@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -10,12 +12,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/auth/jwt.guard';
 import { DishService } from './dish.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
 
 @Controller('dishes')
+@UseGuards(AuthGuard('jwt'))
 export class DishesController {
   private dishService: DishService;
 
@@ -30,7 +34,7 @@ export class DishesController {
   }
 
   @Get()
-  readAll() {
+  readAll(@Req() req) {
     return this.dishService.read();
   }
 
@@ -47,5 +51,10 @@ export class DishesController {
   @Delete(':id')
   deleteOne(@Param('id', ParseIntPipe) dishId: number) {
     return this.dishService.delete(dishId);
+  }
+
+  @Get('/exception')
+  exampleException() {
+    throw new HttpException('My super sample', HttpStatus.PAYLOAD_TOO_LARGE);
   }
 }

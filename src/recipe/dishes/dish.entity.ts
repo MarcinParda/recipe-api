@@ -6,6 +6,7 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
+import { Product } from '../products/product.entity';
 import { User } from '../../auth/user/user.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
 

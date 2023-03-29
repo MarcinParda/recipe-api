@@ -5,7 +5,9 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateDishTable1650537347030 implements MigrationInterface {
+export class CreateDishTable1648725283456 implements MigrationInterface {
+  name = 'CreateDishTable1648725283456';
+
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({

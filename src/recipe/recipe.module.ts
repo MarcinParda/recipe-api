@@ -10,7 +10,7 @@ import { IngredientsController } from './ingredients/ingredients.controller';
 import { IngredientService } from './ingredients/ingredient.service';
 import { Ingredient } from './ingredients/ingredient.entity';
 import { IngredientRepository } from './ingredients/ingredient.repository';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [

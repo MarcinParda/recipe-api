@@ -9,10 +9,10 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/auth/jwt.guard';
-import { CreateProductDTO } from './dto/create-product.dto';
-import { UpdateProductDTO } from './dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
+import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -24,7 +24,7 @@ export class ProductsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  createOne(@Body() product: CreateProductDTO) {
+  createOne(@Body() product: CreateProductDto) {
     return this.productService.create(product);
   }
 
@@ -34,7 +34,7 @@ export class ProductsController {
   }
 
   @Put()
-  updateOne(@Body() product: UpdateProductDTO) {
+  updateOne(@Body() product: UpdateProductDto) {
     return this.productService.update(product);
   }
 

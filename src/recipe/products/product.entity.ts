@@ -3,19 +3,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
+  ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { Dish } from '../dishes/dish.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
-
-export type UnitType =
-  | 'kg'
-  | 'g'
-  | 'tsp'
-  | 'sp'
-  | 'pinch'
-  | 'ml'
-  | 'l'
-  | 'item';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -26,7 +18,7 @@ export class Product extends BaseEntity {
   name: string;
 
   @Column({ type: 'varchar' })
-  unit: UnitType;
+  unit: 'kg' | 'g' | 'tsp' | 'sp' | 'pinch' | 'ml' | 'l' | 'item';
 
   @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.product, {
     onDelete: 'CASCADE',

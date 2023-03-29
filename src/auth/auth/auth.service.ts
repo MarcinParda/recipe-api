@@ -3,12 +3,13 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { CreateUsertDTO } from '../user/dto/create-user.dto';
-import { LoginUsertDTO } from '../user/dto/login-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
+import { LoginUserDto } from '../user/dto/login-user.dto';
+import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -18,37 +19,40 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(user: Pick<CreateUsertDTO, 'email' | 'password'>) {
+  async register(
+    user: Pick<CreateUserDto, 'email' | 'password'>,
+  ): Promise<User> {
     return this.userService.create(user);
   }
 
-  async login({ email, password }: LoginUsertDTO) {
-    const user = await this.userService.findOne({ email });
+  async login({ email, password }: LoginUserDto): Promise<User> {
+    const user = await this.userService.findOneBy({ email });
     if (!user) {
-      throw new BadRequestException('User does not exist');
+      throw new BadRequestException(`User does not exist.`);
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      throw new BadRequestException('Invalid credentials');
+      throw new BadRequestException(`Wrong password.`);
     }
 
     return user;
   }
 
-  async validateUser(userId: number) {
-    return this.userService.findOne({ id: userId });
+  async validateUser(userId): Promise<User> {
+    return this.userService.findOneBy({ id: userId });
   }
 
-  generateTokens(payload: [token: string]) {
-    const token = this.jwtService.sign(payload);
+  generateToken(payload) {
+    const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: `${this.configService.get<string>(
         'JWT_EXPIRATION_REFRESH_SECRET',
       )}s`,
       secret: this.configService.get<string>('JWT_REFRESH_SECRET_TOKEN'),
     });
-    return [token, refreshToken];
+
+    return [accessToken, refreshToken];
   }
 
   async tokenIsActive(token: string, hash: string): Promise<boolean> {
@@ -61,11 +65,11 @@ export class AuthService {
     return true;
   }
 
-  async setAuthTokens(
+  async setAuthToken(
     res,
     payload,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const [accessToken, refreshToken] = this.generateTokens(payload);
+    const [accessToken, refreshToken] = this.generateToken(payload);
 
     await this.userService.update({
       id: payload.user_id,
@@ -85,14 +89,14 @@ export class AuthService {
         domain: this.configService.get('DOMAIN'),
         expires: new Date(
           Date.now() +
-            this.configService.get('JWT_REFRESH_SECRET_TOKEN') * 1000,
+            this.configService.get('JWT_EXPIRATION_REFRESH_SECRET') * 1000,
         ),
       });
 
     return { accessToken, refreshToken };
   }
 
-  async clearAuthTokens(res, user_id: number) {
+  async clearAuthTokens(res, user_id) {
     await this.userService.update({
       id: user_id,
       refreshToken: null,
@@ -100,12 +104,12 @@ export class AuthService {
 
     res
       .clearCookie('access_token', {
-        httpOnly: true,
         domain: this.configService.get('DOMAIN'),
+        httpOnly: true,
       })
       .clearCookie('refresh_token', {
-        httpOnly: true,
         domain: this.configService.get('DOMAIN'),
+        httpOnly: true,
       });
   }
 }

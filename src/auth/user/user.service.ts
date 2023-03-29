@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { CreateUsertDTO } from './dto/create-user.dto';
-import bcrypt from 'bcrypt';
-import { UpdateUserDTO } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import bcrypt from 'bcryptjs';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -12,17 +12,8 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async findOne(where: Partial<User>): Promise<User> {
-    return this.userRepository.findOne({ where });
-  }
-
-  async create(
-    user: Pick<CreateUsertDTO, 'email' | 'password'>,
-  ): Promise<User> {
-    return this.userRepository.save({
-      email: user.email.trim().toLowerCase(),
-      password: this.hashPassword(user.password),
-    });
+  async findOneBy(condition) {
+    return this.userRepository.findOne(condition);
   }
 
   async getOneById(id: number): Promise<User> {
@@ -32,17 +23,25 @@ export class UserService {
       .select(['user.id', 'user.email', 'dishes.name', 'dishes.id'])
       .where('user.id = :id', { id })
       .getOne();
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
   }
 
-  hashPassword(password: string): string {
+  hashPassword(password = '') {
     return bcrypt.hashSync(password, 8);
   }
 
-  async update(user: Partial<UpdateUserDTO>): Promise<User> {
+  async create(user: Pick<CreateUserDto, 'email' | 'password'>): Promise<User> {
+    return this.userRepository.save({
+      email: user.email.toLowerCase(),
+      password: this.hashPassword(user.password),
+    });
+  }
+
+  async update(user: Partial<UpdateUserDto>): Promise<User> {
     const userToUpdate = await this.userRepository.findOne({
       where: { id: user.id },
     });

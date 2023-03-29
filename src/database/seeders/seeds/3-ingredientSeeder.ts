@@ -3,7 +3,7 @@ import { Connection } from 'typeorm';
 import { Dish } from '../../../recipe/dishes/dish.entity';
 import { Product } from '../../../recipe/products/product.entity';
 import { Ingredient } from '../../../recipe/ingredients/ingredient.entity';
-import { initializeSeeds } from '../initializeSeeds';
+import { initializeSeeds } from '../initailizeSeeds';
 
 initializeSeeds();
 
@@ -18,6 +18,6 @@ export default class ingredientSeeder implements Seeder {
           products[Math.floor(Math.random() * products.length)];
         return ingredient;
       })
-      .createMany(15);
+      .createMany(5);
   }
 }

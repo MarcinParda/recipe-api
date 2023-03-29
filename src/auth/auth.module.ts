@@ -6,9 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './auth/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { RefreshJwtStrategy } from './auth/rjwt.strategy';
-import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, UserService, RefreshJwtStrategy, JwtStrategy],
+  providers: [AuthService, UserService, JwtStrategy, RefreshJwtStrategy],
   controllers: [AuthController],
   exports: [AuthService, UserService],
 })
