@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,46 +12,59 @@ import {
   Put,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { FilterQueryDto } from '../../common/dto/filter-query.dto';
+import { Dish } from './dish.entity';
+import { FilterBy } from '../../common/decorators/filter-by.decorator';
 import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
+import { IngredientService } from '../ingredients/ingredient.service';
 
 @Controller('dishes')
 @UseGuards(AuthGuard('jwt'))
+@UseInterceptors(ClassSerializerInterceptor)
 export class DishesController {
-  private dishService: DishService;
-
-  constructor(dishService: DishService) {
-    this.dishService = dishService;
-  }
+  constructor(
+    private readonly dishService: DishService,
+    private readonly ingredientService: IngredientService,
+  ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   createOne(@Req() req, @Body() dish: CreateDishDto) {
     return this.dishService.create(req.user.id, dish);
   }
 
   @Get()
-  readAll(@Req() req) {
-    return this.dishService.read();
+  readAll(@Req() req, @FilterBy<Dish>() filters: FilterQueryDto<Dish>) {
+    return this.dishService.read(req.user.id, filters);
   }
 
   @Get(':id')
-  readOne(@Param('id', ParseIntPipe) dishId: number) {
-    return this.dishService.getOneById(dishId);
+  @UseGuards(JwtAuthGuard)
+  readOne(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
+    return this.dishService.getOneById(dishId, req.user.id);
+  }
+
+  @Get(':id/ingredients')
+  @UseGuards(JwtAuthGuard)
+  readIngredients(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
+    return this.ingredientService.findBy({ dishId }, req.user.id);
   }
 
   @Put()
-  updateOne(@Body() dish: UpdateDishDto) {
-    return this.dishService.update(dish);
+  @UseGuards(JwtAuthGuard)
+  updateOne(@Req() req, @Body() dish: UpdateDishDto) {
+    return this.dishService.update(dish.id, req.user.id);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id', ParseIntPipe) dishId: number) {
-    return this.dishService.delete(dishId);
+  @UseGuards(JwtAuthGuard)
+  deleteOne(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
+    return this.dishService.delete(dishId, req.user.id);
   }
 
   @Get('/exception')

@@ -3,14 +3,16 @@ POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Milk",
-  "unit": "l",
+  "name": "Pepper",
   "amount": 1
 }
 
 ### [R]ead products
 GET http://localhost:3000/products
 
+### [R]ead product
+GET http://localhost:3000/products/1
+src/recipe/dishes/dish.service.ts
 ### [U]pdate product
 PUT http://localhost:3000/products
 Content-Type: application/json
