@@ -3,10 +3,9 @@ POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Milk",
-  "unit": "l",
-  "amount": 1,
-  "dishId": 1
+  "name": "Pepper",
+  "unit": "pinch",
+  "amount": 1
 }
 
 ### [R]ead products
@@ -14,7 +13,7 @@ GET http://localhost:3000/products
 
 ### [U]pdate dish
 PUT http://localhost:3000/products
-Content-Type: application/json
+Content-Type: application/json 
 
 {
   "id": 1,

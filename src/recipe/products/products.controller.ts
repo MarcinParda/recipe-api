@@ -7,7 +7,9 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth/jwt.guard';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
 import { ProductService } from './product.service';
@@ -21,8 +23,8 @@ export class ProductsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   createOne(@Body() product: CreateProductDTO) {
-    // const dish = this.dishService.getOneById(product.dishId);
     return this.productService.create(product);
   }
 
