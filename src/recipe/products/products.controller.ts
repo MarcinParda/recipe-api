@@ -16,7 +16,6 @@ import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
 import { FilterBy } from '../../common/decorators/filter-by.decorator';
 import { Product } from './product.entity';
 import { FilterQueryDto } from '../../common/dto/filter-query.dto';
-import { PaginateQueryDto } from '../../common/dto/paginate-query.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -38,11 +37,6 @@ export class ProductsController {
     filters: FilterQueryDto<Product>,
   ) {
     return this.productService.read(filters);
-  }
-
-  @Get(':id')
-  readOne(@Param('id', ParseIntPipe) id: number) {
-    return this.productService.getOneById(id);
   }
 
   @Put()

@@ -13,10 +13,7 @@ Authorization
 GET http://localhost:3000/dishes
 
 ### [R]ead one dish
-GET http://localhost:3000/dishes/151
-
-### [R]ead ingredients
-GET http://localhost:3000/dishes/102/ingredients
+PUT http://localhost:3000/dishes/6666666
 
 ### [U]pdate dish
 PUT http://localhost:3000/dishes

@@ -14,6 +14,6 @@ export default class productSeeder implements Seeder {
         dish.user = users[Math.floor(Math.random() * users.length)];
         return dish;
       })
-      .createMany(150);
+      .createMany(5);
   }
 }
