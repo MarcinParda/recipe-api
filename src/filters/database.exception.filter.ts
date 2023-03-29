@@ -4,12 +4,14 @@ import {
   ExceptionFilter,
   HttpStatus,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { PostgresError } from 'pg-error-enum';
 import { QueryFailedError, TypeORMError } from 'typeorm';
 
 @Catch(TypeORMError)
 export class DatabaseExceptionFilter implements ExceptionFilter {
+  constructor(private readonly configService: ConfigService) {}
   catch(exception: TypeORMError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -21,6 +23,14 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
         message = 'Duplicate entry';
         statusCode = HttpStatus.CONFLICT;
       }
+    }
+
+    if (this.configService.get('NODE_ENV') === 'development') {
+      return response.status(statusCode).json({
+        statusCode,
+        stack: exception.stack,
+        message: exception.message,
+      });
     }
 
     response.status(statusCode).json({

@@ -25,6 +25,19 @@ export class UserService {
     });
   }
 
+  async getOneById(id: number): Promise<User> {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.dishes', 'dishes')
+      .select(['user.id', 'user.email', 'dishes.name', 'dishes.id'])
+      .where('user.id = :id', { id })
+      .getOne();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
   hashPassword(password: string): string {
     return bcrypt.hashSync(password, 8);
   }

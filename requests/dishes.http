@@ -3,9 +3,9 @@ POST http://localhost:3000/dishes
 Content-Type: application/json
 
 {
-  "name": "Burgir",
+  "name": "Mega Burgir",
   "servings": 1,
-  "slug": "burgir"
+  "description": "A burger so big you can't eat it all"
 }
 
 ### [R]ead dishes
