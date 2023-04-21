@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# databse
+/database/my-db.sqlite3
+
 # Logs
 logs
 *.log
@@ -34,5 +37,6 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Environment files
 .env.*
 !.env.example
