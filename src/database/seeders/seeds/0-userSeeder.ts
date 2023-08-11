@@ -1,12 +1,11 @@
 import { Factory, Seeder } from 'typeorm-seeding';
-import { Connection } from 'typeorm';
 import { User } from '../../../auth/user/user.entity';
 import { initializeSeeds } from '../initailizeSeeds';
 
 initializeSeeds();
 
 export default class userSeeder implements Seeder {
-  public async run(factory: Factory, connection: Connection): Promise<void> {
+  public async run(factory: Factory): Promise<void> {
     await factory(User)().createMany(15);
   }
 }
